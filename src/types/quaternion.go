@@ -27,6 +27,10 @@ SOFTWARE.
 // Package types ...
 package types
 
+import (
+	"fmt"
+)
+
 // Quaternion : Quaternion type
 type Quaternion struct {
 	X float32
@@ -38,4 +42,8 @@ type Quaternion struct {
 // NewQuaternion : Creates a new vector
 func NewQuaternion(x float32, y float32, z float32, w float32) Quaternion {
 	return Quaternion{X: x, Y: y, Z: z, W: w}
+}
+
+func (v Quaternion) String() string {
+	return fmt.Sprintf("[quaternion %0.2f, %0.2f, %0.2f, %0.2f]", v.X, v.Y, v.Z, v.W)
 }

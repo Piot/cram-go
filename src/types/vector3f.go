@@ -27,6 +27,10 @@ SOFTWARE.
 // Package types ...
 package types
 
+import (
+	"fmt"
+)
+
 // Vector3f : Vector type
 type Vector3f struct {
 	X float32
@@ -37,4 +41,8 @@ type Vector3f struct {
 // NewVector3f : Creates a new vector
 func NewVector3f(x float32, y float32, z float32) Vector3f {
 	return Vector3f{X: x, Y: y, Z: z}
+}
+
+func (v Vector3f) String() string {
+	return fmt.Sprintf("[vector3f %0.2f, %0.2f, %0.2f]", v.X, v.Y, v.Z)
 }
