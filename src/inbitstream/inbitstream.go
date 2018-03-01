@@ -37,6 +37,11 @@ type InBitStream struct {
 	stream *brookinbitstream.InBitStream
 }
 
+// New : Create in bit stream
+func New(stream *brookinbitstream.InBitStream) *InBitStream {
+	return &InBitStream{stream: stream}
+}
+
 func (s *InBitStream) readSignedScale(valueRange int, bits uint) float32 {
 	valuesPossible := 2 << (bits - 2)
 	sv, _ := s.stream.ReadSignedBits(bits)
@@ -56,6 +61,9 @@ func (s *InBitStream) ReadVector3f(valueRange int, bits uint) types.Vector3f {
 
 // ReadRotation : Reads a rotation
 func (s *InBitStream) ReadRotation() types.Quaternion {
-	s.stream.ReadBits(16)
+	s.stream.ReadBits(3)
+	s.stream.ReadInt16()
+	s.stream.ReadInt16()
+	s.stream.ReadInt16()
 	return types.NewQuaternion(0, 0, 0, 1)
 }
