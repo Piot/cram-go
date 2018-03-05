@@ -39,6 +39,11 @@ type OutBitStream struct {
 	stream *brookoutbitstream.OutBitStream
 }
 
+// New : Create out bit stream
+func New(stream *brookoutbitstream.OutBitStream) *OutBitStream {
+	return &OutBitStream{stream: stream}
+}
+
 func (s *OutBitStream) writeSignedScale(v float32, rangeValue int, bits uint) error {
 	if bits < 2 {
 		return fmt.Errorf("Must write at least two bits")
