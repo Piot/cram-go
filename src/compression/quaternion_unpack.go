@@ -24,42 +24,34 @@ SOFTWARE.
 
 */
 
-// Package types ...
-package types
+package compression
 
 import (
 	"fmt"
+	"math"
+
+	"github.com/piot/cram-go/src/types"
 )
 
-// Quaternion : Quaternion type
-type Quaternion struct {
-	X float32
-	Y float32
-	Z float32
-	W float32
-}
+// QuaternionUnPack :
+func QuaternionUnPack(info QuaternionPackInfo) (types.Quaternion, error) {
+	a := float32(info.A) / floatPrecisionMultiplier
+	b := float32(info.B) / floatPrecisionMultiplier
+	c := float32(info.C) / floatPrecisionMultiplier
+	maxIndex := info.MaxIndex
 
-// Index :
-func (v Quaternion) Index(i int) float32 {
-	switch i {
+	d := float32(math.Sqrt(float64(1.0 - (a*a + b*b + c*c))))
+
+	switch maxIndex {
 	case 0:
-		return v.X
+		return types.NewQuaternion(d, a, b, c), nil
 	case 1:
-		return v.Y
+		return types.NewQuaternion(a, d, b, c), nil
 	case 2:
-		return v.Z
+		return types.NewQuaternion(a, b, d, c), nil
 	case 3:
-		return v.W
+		return types.NewQuaternion(a, b, c, d), nil
 	default:
-		return -1
+		return types.NewQuaternion(0, 0, 0, 0), fmt.Errorf("Unknown max index")
 	}
-}
-
-// NewQuaternion : Creates a new vector
-func NewQuaternion(x float32, y float32, z float32, w float32) Quaternion {
-	return Quaternion{X: x, Y: y, Z: z, W: w}
-}
-
-func (v Quaternion) String() string {
-	return fmt.Sprintf("[quaternion %0.2f, %0.2f, %0.2f, %0.2f]", v.X, v.Y, v.Z, v.W)
 }

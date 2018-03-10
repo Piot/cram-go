@@ -31,6 +31,7 @@ import (
 	"fmt"
 
 	brookoutbitstream "github.com/piot/brook-go/src/outbitstream"
+	"github.com/piot/cram-go/src/compression"
 	"github.com/piot/cram-go/src/types"
 )
 
@@ -64,8 +65,9 @@ func (s *OutBitStream) WriteVector3f(v types.Vector3f, rangeValue int, bits uint
 
 // WriteQuaternion : Write quaternion to stream
 func (s *OutBitStream) WriteQuaternion(v types.Quaternion) {
-	s.stream.WriteBits(0, 3)
-	s.stream.WriteBits(0, 16)
-	s.stream.WriteBits(0, 16)
-	s.stream.WriteBits(0, 16)
+	info := compression.QuaternionPack(&v)
+	s.stream.WriteBits(uint32(info.MaxIndex), 3)
+	s.stream.WriteBits(uint32(info.A), 16)
+	s.stream.WriteBits(uint32(info.B), 16)
+	s.stream.WriteBits(uint32(info.C), 16)
 }

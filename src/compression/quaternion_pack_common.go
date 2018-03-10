@@ -24,42 +24,20 @@ SOFTWARE.
 
 */
 
-// Package types ...
-package types
+package compression
 
-import (
-	"fmt"
-)
+import "fmt"
 
-// Quaternion : Quaternion type
-type Quaternion struct {
-	X float32
-	Y float32
-	Z float32
-	W float32
+// QuaternionPackInfo :
+type QuaternionPackInfo struct {
+	A        int16
+	B        int16
+	C        int16
+	MaxIndex byte
 }
 
-// Index :
-func (v Quaternion) Index(i int) float32 {
-	switch i {
-	case 0:
-		return v.X
-	case 1:
-		return v.Y
-	case 2:
-		return v.Z
-	case 3:
-		return v.W
-	default:
-		return -1
-	}
-}
+const floatPrecisionMultiplier = 10000.0
 
-// NewQuaternion : Creates a new vector
-func NewQuaternion(x float32, y float32, z float32, w float32) Quaternion {
-	return Quaternion{X: x, Y: y, Z: z, W: w}
-}
-
-func (v Quaternion) String() string {
-	return fmt.Sprintf("[quaternion %0.2f, %0.2f, %0.2f, %0.2f]", v.X, v.Y, v.Z, v.W)
+func (i *QuaternionPackInfo) String() string {
+	return fmt.Sprintf("[quaternionpack %v, %v, %v, %v]", i.A, i.B, i.C, i.MaxIndex)
 }

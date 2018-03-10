@@ -29,6 +29,7 @@ package inbitstream
 
 import (
 	brookinbitstream "github.com/piot/brook-go/src/inbitstream"
+	"github.com/piot/cram-go/src/compression"
 	"github.com/piot/cram-go/src/types"
 )
 
@@ -61,9 +62,12 @@ func (s *InBitStream) ReadVector3f(valueRange int, bits uint) types.Vector3f {
 
 // ReadRotation : Reads a rotation
 func (s *InBitStream) ReadRotation() types.Quaternion {
-	s.stream.ReadBits(3)
-	s.stream.ReadInt16()
-	s.stream.ReadInt16()
-	s.stream.ReadInt16()
-	return types.NewQuaternion(0, 0, 0, 1)
+	maxIndex, _ := s.stream.ReadBits(3)
+	a, _ := s.stream.ReadInt16()
+	b, _ := s.stream.ReadInt16()
+	c, _ := s.stream.ReadInt16()
+
+	info := compression.QuaternionPackInfo{A: a, B: b, C: c, MaxIndex: byte(maxIndex)}
+	q, _ := compression.QuaternionUnPack(info)
+	return q
 }

@@ -24,42 +24,33 @@ SOFTWARE.
 
 */
 
-// Package types ...
-package types
+package compression
 
 import (
-	"fmt"
+	"testing"
+
+	"github.com/piot/cram-go/src/types"
 )
 
-// Quaternion : Quaternion type
-type Quaternion struct {
-	X float32
-	Y float32
-	Z float32
-	W float32
+const EPSILON float32 = 0.0005
+
+func floatAlmostEqual(a, b float32) bool {
+	return (a-b) < EPSILON && (b-a) < EPSILON
 }
 
-// Index :
-func (v Quaternion) Index(i int) float32 {
-	switch i {
-	case 0:
-		return v.X
-	case 1:
-		return v.Y
-	case 2:
-		return v.Z
-	case 3:
-		return v.W
-	default:
-		return -1
+func almostEqual(a types.Quaternion, b types.Quaternion) bool {
+	return floatAlmostEqual(a.X, b.X) && floatAlmostEqual(a.Y, b.Y) && floatAlmostEqual(a.Z, b.Z) && floatAlmostEqual(a.W, b.W)
+}
+
+func TestReadTenBits(t *testing.T) {
+	q := types.NewQuaternion(-0.183, 0.683, -0.062, 0.704)
+	info := QuaternionPack(&q)
+	q2, err := QuaternionUnPack(info)
+	if err != nil {
+		t.Error(err)
 	}
-}
 
-// NewQuaternion : Creates a new vector
-func NewQuaternion(x float32, y float32, z float32, w float32) Quaternion {
-	return Quaternion{X: x, Y: y, Z: z, W: w}
-}
-
-func (v Quaternion) String() string {
-	return fmt.Sprintf("[quaternion %0.2f, %0.2f, %0.2f, %0.2f]", v.X, v.Y, v.Z, v.W)
+	if !almostEqual(q, q2) {
+		t.Errorf("Quaternions are not equal")
+	}
 }

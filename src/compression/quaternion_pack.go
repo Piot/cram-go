@@ -24,42 +24,64 @@ SOFTWARE.
 
 */
 
-// Package types ...
-package types
+package compression
 
 import (
-	"fmt"
+	"math"
+
+	"github.com/piot/cram-go/src/types"
 )
 
-// Quaternion : Quaternion type
-type Quaternion struct {
-	X float32
-	Y float32
-	Z float32
-	W float32
-}
+func findMaxElementAndSign(q *types.Quaternion) (int, int) {
+	maxIndex := 0
+	maxValue := float32(0)
 
-// Index :
-func (v Quaternion) Index(i int) float32 {
-	switch i {
-	case 0:
-		return v.X
-	case 1:
-		return v.Y
-	case 2:
-		return v.Z
-	case 3:
-		return v.W
-	default:
-		return -1
+	sign := 0
+
+	for i := 0; i < 4; i++ {
+		var element = q.Index(i)
+		var abs = float32(math.Abs(float64(element)))
+
+		if abs > maxValue {
+			sign = 1
+			if element < 0 {
+				sign = -1
+			}
+			maxIndex = i
+			maxValue = abs
+		}
 	}
+
+	return maxIndex, sign
 }
 
-// NewQuaternion : Creates a new vector
-func NewQuaternion(x float32, y float32, z float32, w float32) Quaternion {
-	return Quaternion{X: x, Y: y, Z: z, W: w}
-}
+// QuaternionPack :
+func QuaternionPack(q *types.Quaternion) QuaternionPackInfo {
+	maxIndex, sign := findMaxElementAndSign(q)
 
-func (v Quaternion) String() string {
-	return fmt.Sprintf("[quaternion %0.2f, %0.2f, %0.2f, %0.2f]", v.X, v.Y, v.Z, v.W)
+	var a float32
+	var b float32
+	var c float32
+
+	factor := float32(sign) * floatPrecisionMultiplier
+
+	if maxIndex == 0 {
+		a = q.Y * factor
+		b = q.Z * factor
+		c = q.W * factor
+	} else if maxIndex == 1 {
+		a = q.X * factor
+		b = q.Z * factor
+		c = q.W * factor
+	} else if maxIndex == 2 {
+		a = q.X * factor
+		b = q.Y * factor
+		c = q.W * factor
+	} else {
+		a = q.X * factor
+		b = q.Y * factor
+		c = q.Z * factor
+	}
+
+	return QuaternionPackInfo{MaxIndex: byte(maxIndex), A: int16(a), B: int16(b), C: int16(c)}
 }
