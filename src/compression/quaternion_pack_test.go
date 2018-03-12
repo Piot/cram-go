@@ -39,10 +39,10 @@ func floatAlmostEqual(a, b float32) bool {
 }
 
 func almostEqual(a types.Quaternion, b types.Quaternion) bool {
-	return floatAlmostEqual(a.X, b.X) && floatAlmostEqual(a.Y, b.Y) && floatAlmostEqual(a.Z, b.Z) && floatAlmostEqual(a.W, b.W)
+	return a.SameRepresentation(b)
 }
 
-func TestReadTenBits(t *testing.T) {
+func TestPackAndUnpack(t *testing.T) {
 	q := types.NewQuaternion(-0.183, 0.683, -0.062, 0.704)
 	info := QuaternionPack(&q)
 	q2, err := QuaternionUnPack(info)
@@ -53,4 +53,71 @@ func TestReadTenBits(t *testing.T) {
 	if !almostEqual(q, q2) {
 		t.Errorf("Quaternions are not equal")
 	}
+}
+
+func TestPackValues(t *testing.T) {
+	q := types.NewQuaternion(-0.183, 0.683, -0.062, 0.704)
+	info := QuaternionPack(&q)
+	if info.A != -1830 {
+		t.Errorf("A is wrong")
+	}
+
+	if info.B != 6830 {
+		t.Errorf("B is wrong")
+	}
+
+	if info.C != -620 {
+		t.Errorf("C is wrong")
+	}
+
+	if info.MaxIndex != 3 {
+		t.Errorf("MaxIndex is wrong")
+	}
+
+}
+
+func checkInfoValues(t *testing.T, q types.Quaternion, a int16, b int16, c int16, maxIndex byte) {
+	info := QuaternionPack(&q)
+	if info.A != a {
+		t.Errorf("A is wrong")
+	}
+
+	if info.B != b {
+		t.Errorf("B is wrong")
+	}
+
+	if info.C != c {
+		t.Errorf("C is wrong")
+	}
+
+	if info.MaxIndex != maxIndex {
+		t.Errorf("MaxIndex is wrong")
+	}
+	q2, err := QuaternionUnPack(info)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !almostEqual(q, q2) {
+		t.Errorf("Quaternions are not equal %v and %v", q, q2)
+	}
+}
+
+func TestPackValues2(t *testing.T) {
+	q := types.NewQuaternion(-0.002, -0.993, 0.120, 0.015)
+	checkInfoValues(t, q, 20, -1200, -150, 1)
+}
+
+func TestPackValues3(t *testing.T) {
+	q := types.NewQuaternion(-0.02, 0.28, 0.00, 0.96)
+	info := QuaternionPack(&q)
+	q2, err := QuaternionUnPack(info)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !almostEqual(q, q2) {
+		t.Errorf("Quaternions are not equal")
+	}
+
 }
