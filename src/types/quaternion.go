@@ -29,6 +29,7 @@ package types
 
 import (
 	"fmt"
+	"math"
 )
 
 // Quaternion : Quaternion type
@@ -58,6 +59,26 @@ func (v Quaternion) Index(i int) float32 {
 // NewQuaternion : Creates a new vector
 func NewQuaternion(x float32, y float32, z float32, w float32) Quaternion {
 	return Quaternion{X: x, Y: y, Z: z, W: w}
+}
+
+func almostEqual(a float32, b float32) bool {
+	return math.Abs(float64(a-b)) < 0.0005
+}
+
+func (v Quaternion) almostEqual(o Quaternion) bool {
+	return almostEqual(v.X, o.X) &&
+		almostEqual(v.Y, o.Y) &&
+		almostEqual(v.Z, o.Z) &&
+		almostEqual(v.W, o.W)
+}
+
+func (v Quaternion) invert() Quaternion {
+	return Quaternion{X: -v.X, Y: -v.Y, Z: -v.Z, W: -v.W}
+}
+
+// SameRepresentation :
+func (v Quaternion) SameRepresentation(o Quaternion) bool {
+	return v.almostEqual(o) || v.almostEqual(o.invert())
 }
 
 func (v Quaternion) String() string {
