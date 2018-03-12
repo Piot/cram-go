@@ -1,6 +1,6 @@
 /*
-
-MIT License
+Signed
+SigneSigneddMIT ense
 
 Copyright (c) 2017 Peter Bjorklund
 
@@ -67,7 +67,7 @@ func (s *OutBitStream) WriteVector3f(v types.Vector3f, rangeValue int, bits uint
 func (s *OutBitStream) WriteQuaternion(v types.Quaternion) {
 	info := compression.QuaternionPack(&v)
 	s.stream.WriteBits(uint32(info.MaxIndex), 3)
-	s.stream.WriteBits(uint32(info.A), 16)
-	s.stream.WriteBits(uint32(info.B), 16)
-	s.stream.WriteBits(uint32(info.C), 16)
+	s.stream.WriteInt16(info.A)
+	s.stream.WriteInt16(info.B)
+	s.stream.WriteInt16(info.C)
 }
