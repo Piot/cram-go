@@ -29,6 +29,7 @@ package types
 
 import (
 	"fmt"
+	"math"
 )
 
 // Vector3f : Vector type
@@ -45,4 +46,18 @@ func NewVector3f(x float32, y float32, z float32) Vector3f {
 
 func (v Vector3f) String() string {
 	return fmt.Sprintf("[vector3f %0.2f, %0.2f, %0.2f]", v.X, v.Y, v.Z)
+}
+
+// DistanceTo calculates the Euclidean distance between two points
+func (v Vector3f) DistanceTo(o Vector3f) float32 {
+	return float32(math.Sqrt(float64(v.SquaredDistance(o))))
+}
+
+// SquaredDistance calculates the squared Euclidean distance between two points
+func (v Vector3f) SquaredDistance(o Vector3f) float32 {
+	xd := o.X - v.X
+	yd := o.Y - v.Y
+	zd := o.Z - v.Z
+
+	return xd*xd + yd*yd + zd*zd
 }
