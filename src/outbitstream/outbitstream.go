@@ -51,23 +51,52 @@ func (s *OutBitStream) writeSignedScale(v float32, rangeValue int, bits uint) er
 	}
 	valuesPossible := 2 << (bits - 2)
 	av := int(v * float32(valuesPossible) / float32(rangeValue))
-	s.stream.WriteSignedBits(int32(av), bits)
+	writeErr := s.stream.WriteSignedBits(int32(av), bits)
+	if writeErr != nil {
+		return writeErr
+	}
 
 	return nil
 }
 
 // WriteVector3f : Write vector to stream
-func (s *OutBitStream) WriteVector3f(v types.Vector3f, rangeValue int, bits uint) {
-	s.writeSignedScale(v.X, rangeValue, bits)
-	s.writeSignedScale(v.Y, rangeValue, bits)
-	s.writeSignedScale(v.Z, rangeValue, bits)
+func (s *OutBitStream) WriteVector3f(v types.Vector3f, rangeValue int, bits uint) error {
+	var err error
+	err = s.writeSignedScale(v.X, rangeValue, bits)
+	if err != nil {
+		return err
+	}
+	err = s.writeSignedScale(v.Y, rangeValue, bits)
+	if err != nil {
+		return err
+	}
+	err = s.writeSignedScale(v.Z, rangeValue, bits)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // WriteQuaternion : Write quaternion to stream
-func (s *OutBitStream) WriteQuaternion(v types.Quaternion) {
+func (s *OutBitStream) WriteQuaternion(v types.Quaternion) error {
 	info := compression.QuaternionPack(&v)
-	s.stream.WriteBits(uint32(info.MaxIndex), 3)
-	s.stream.WriteInt16(info.A)
-	s.stream.WriteInt16(info.B)
-	s.stream.WriteInt16(info.C)
+	var err error
+	err = s.stream.WriteBits(uint32(info.MaxIndex), 3)
+	if err != nil {
+		return err
+	}
+
+	err = s.stream.WriteInt16(info.A)
+	if err != nil {
+		return err
+	}
+	err = s.stream.WriteInt16(info.B)
+	if err != nil {
+		return err
+	}
+	err = s.stream.WriteInt16(info.C)
+	if err != nil {
+		return err
+	}
+	return nil
 }
