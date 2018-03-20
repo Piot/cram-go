@@ -50,8 +50,8 @@ func (s *OutBitStream) writeSignedScale(v float32, rangeValue int, bits uint) er
 		return fmt.Errorf("Must write at least two bits")
 	}
 	valuesPossible := 2 << (bits - 2)
-	av := int(v * float32(valuesPossible) / float32(rangeValue))
-	writeErr := s.stream.WriteSignedBits(int32(av), bits)
+	av := int32(v * float32(valuesPossible) / float32(rangeValue))
+	writeErr := s.stream.WriteSignedBits(av, bits)
 	if writeErr != nil {
 		return writeErr
 	}
@@ -81,6 +81,7 @@ func (s *OutBitStream) WriteVector3f(v types.Vector3f, rangeValue int, bits uint
 func (s *OutBitStream) WriteQuaternion(v types.Quaternion) error {
 	info := compression.QuaternionPack(&v)
 	var err error
+
 	err = s.stream.WriteBits(uint32(info.MaxIndex), 3)
 	if err != nil {
 		return err
@@ -98,5 +99,6 @@ func (s *OutBitStream) WriteQuaternion(v types.Quaternion) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

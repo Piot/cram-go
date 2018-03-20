@@ -43,31 +43,55 @@ func New(stream *brookinbitstream.InBitStream) *InBitStream {
 	return &InBitStream{stream: stream}
 }
 
-func (s *InBitStream) readSignedScale(valueRange int, bits uint) float32 {
+func (s *InBitStream) readSignedScale(valueRange int, bits uint) (float32, error) {
 	valuesPossible := 2 << (bits - 2)
-	sv, _ := s.stream.ReadSignedBits(bits)
+	sv, readSignedErr := s.stream.ReadSignedBits(bits)
+	if readSignedErr != nil {
+		return 0.0, readSignedErr
+	}
 	v := float32(sv) * float32(valueRange) / float32(valuesPossible)
 
-	return float32(v)
+	return float32(v), nil
 }
 
 // ReadVector3f : Reads a vector
-func (s *InBitStream) ReadVector3f(valueRange int, bits uint) types.Vector3f {
-	x := s.readSignedScale(valueRange, bits)
-	y := s.readSignedScale(valueRange, bits)
-	z := s.readSignedScale(valueRange, bits)
+func (s *InBitStream) ReadVector3f(valueRange int, bits uint) (types.Vector3f, error) {
+	x, xErr := s.readSignedScale(valueRange, bits)
+	if xErr != nil {
+		return types.Vector3f{}, xErr
+	}
+	y, yErr := s.readSignedScale(valueRange, bits)
+	if yErr != nil {
+		return types.Vector3f{}, yErr
+	}
+	z, zErr := s.readSignedScale(valueRange, bits)
+	if zErr != nil {
+		return types.Vector3f{}, zErr
+	}
 
-	return types.NewVector3f(x, y, z)
+	return types.NewVector3f(x, y, z), nil
 }
 
 // ReadRotation : Reads a rotation
-func (s *InBitStream) ReadRotation() types.Quaternion {
-	maxIndex, _ := s.stream.ReadBits(3)
-	a, _ := s.stream.ReadInt16()
-	b, _ := s.stream.ReadInt16()
-	c, _ := s.stream.ReadInt16()
+func (s *InBitStream) ReadRotation() (types.Quaternion, error) {
+	maxIndex, maxIndexErr := s.stream.ReadBits(3)
+	if maxIndexErr != nil {
+		return types.Quaternion{}, maxIndexErr
+	}
+	a, aErr := s.stream.ReadInt16()
+	if aErr != nil {
+		return types.Quaternion{}, aErr
+	}
+	b, bErr := s.stream.ReadInt16()
+	if bErr != nil {
+		return types.Quaternion{}, bErr
+	}
+	c, cErr := s.stream.ReadInt16()
+	if maxIndexErr != cErr {
+		return types.Quaternion{}, cErr
+	}
 
 	info := compression.QuaternionPackInfo{A: a, B: b, C: c, MaxIndex: byte(maxIndex)}
-	q, _ := compression.QuaternionUnPack(info)
-	return q
+	q, qErr := compression.QuaternionUnPack(info)
+	return q, qErr
 }
