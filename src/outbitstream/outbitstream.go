@@ -1,6 +1,6 @@
 /*
-Signed
-SigneSigneddMIT ense
+
+MIT License
 
 Copyright (c) 2017 Peter Bjorklund
 
@@ -37,11 +37,11 @@ import (
 
 // OutBitStream : OutBitStream type
 type OutBitStream struct {
-	stream *brookoutbitstream.OutBitStream
+	stream brookoutbitstream.OutBitStream
 }
 
 // New : Create out bit stream
-func New(stream *brookoutbitstream.OutBitStream) *OutBitStream {
+func New(stream brookoutbitstream.OutBitStream) *OutBitStream {
 	return &OutBitStream{stream: stream}
 }
 

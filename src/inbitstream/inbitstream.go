@@ -35,11 +35,11 @@ import (
 
 // InBitStream : InBitStream type
 type InBitStream struct {
-	stream *brookinbitstream.InBitStream
+	stream brookinbitstream.InBitStream
 }
 
 // New : Create in bit stream
-func New(stream *brookinbitstream.InBitStream) *InBitStream {
+func New(stream brookinbitstream.InBitStream) *InBitStream {
 	return &InBitStream{stream: stream}
 }
 
