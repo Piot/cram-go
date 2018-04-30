@@ -29,7 +29,7 @@ package compression
 import (
 	"math"
 
-	"github.com/piot/cram-go/src/types"
+	"github.com/piot/basal-go/src/types"
 )
 
 func findMaxElementAndSign(q *types.Quaternion) (int, int) {

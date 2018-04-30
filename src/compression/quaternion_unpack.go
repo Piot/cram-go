@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/piot/cram-go/src/types"
+	"github.com/piot/basal-go/src/types"
 )
 
 // QuaternionUnPack :

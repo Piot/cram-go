@@ -30,9 +30,9 @@ package outbitstream
 import (
 	"fmt"
 
+	"github.com/piot/basal-go/src/types"
 	brookoutbitstream "github.com/piot/brook-go/src/outbitstream"
 	"github.com/piot/cram-go/src/compression"
-	"github.com/piot/cram-go/src/types"
 )
 
 // OutBitStream : OutBitStream type

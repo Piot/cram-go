@@ -29,7 +29,7 @@ package compression
 import (
 	"testing"
 
-	"github.com/piot/cram-go/src/types"
+	"github.com/piot/basal-go/src/types"
 )
 
 const EPSILON float32 = 0.0005

@@ -28,9 +28,9 @@ SOFTWARE.
 package inbitstream
 
 import (
+	"github.com/piot/basal-go/src/types"
 	brookinbitstream "github.com/piot/brook-go/src/inbitstream"
 	"github.com/piot/cram-go/src/compression"
-	"github.com/piot/cram-go/src/types"
 )
 
 // InBitStream : InBitStream type
