@@ -1,4 +1,4 @@
-#### cram-go
+### cram-go
 
 Quantization and compression of scalars and basic geometry types.
 
