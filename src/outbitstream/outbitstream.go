@@ -45,12 +45,12 @@ func New(stream brookoutbitstream.OutBitStream) *OutBitStream {
 	return &OutBitStream{stream: stream}
 }
 
-func (s *OutBitStream) writeSignedScale(v float32, rangeValue int, bits uint) error {
+func (s *OutBitStream) writeSignedScale(v int32, rangeValue int, bits uint) error {
 	if bits < 2 {
 		return fmt.Errorf("Must write at least two bits")
 	}
 	valuesPossible := 2 << (bits - 2)
-	av := int32(v * float32(valuesPossible) / float32(rangeValue))
+	av := int32(int64(v) * int64(valuesPossible) / int64(rangeValue))
 	writeErr := s.stream.WriteSignedBits(av, bits)
 	if writeErr != nil {
 		return writeErr

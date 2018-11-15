@@ -43,15 +43,15 @@ func New(stream brookinbitstream.InBitStream) *InBitStream {
 	return &InBitStream{stream: stream}
 }
 
-func (s *InBitStream) readSignedScale(valueRange int, bits uint) (float32, error) {
+func (s *InBitStream) readSignedScale(valueRange int, bits uint) (int32, error) {
 	valuesPossible := 2 << (bits - 2)
 	sv, readSignedErr := s.stream.ReadSignedBits(bits)
 	if readSignedErr != nil {
 		return 0.0, readSignedErr
 	}
-	v := float32(sv) * float32(valueRange) / float32(valuesPossible)
+	v := int64(sv) * int64(valueRange) / int64(valuesPossible)
 
-	return float32(v), nil
+	return int32(v), nil
 }
 
 // ReadVector3f : Reads a vector
