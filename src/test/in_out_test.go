@@ -47,10 +47,10 @@ func TestInOut(t *testing.T) {
 	testStream := createCramStream()
 	cramStream := testStream.CramStream()
 
-	cramStream.WriteVector3f(v, 1000*types.FixedPointFactor, 24)
+	cramStream.WriteVector3f(v, 1000, 24)
 	inCramStream := testStream.Flush()
 
-	readV, err := inCramStream.ReadVector3f(1000*types.FixedPointFactor, 24)
+	readV, err := inCramStream.ReadVector3f(1000, 24)
 	if err != nil {
 		t.Fatal(err)
 	}

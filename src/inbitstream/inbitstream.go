@@ -49,7 +49,7 @@ func (s *InBitStream) readSignedScale(valueRange int, bits uint) (int32, error) 
 	if readSignedErr != nil {
 		return 0.0, readSignedErr
 	}
-	v := int64(sv) * int64(valueRange) / int64(valuesPossible)
+	v := int64(sv) * int64(valueRange) * types.FixedPointFactor / int64(valuesPossible)
 
 	return int32(v), nil
 }

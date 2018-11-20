@@ -50,8 +50,8 @@ func (s *OutBitStream) writeSignedScale(v int32, rangeValue int, bits uint) erro
 		return fmt.Errorf("Must write at least two bits")
 	}
 	valuesPossible := 2 << (bits - 2)
-	av := int32(int64(v) * int64(valuesPossible) / int64(rangeValue))
-	writeErr := s.stream.WriteSignedBits(av, bits)
+	av := int64((int64(v) * int64(valuesPossible)) / (int64(rangeValue) * int64(types.FixedPointFactor)))
+	writeErr := s.stream.WriteSignedBits(int32(av), bits)
 	if writeErr != nil {
 		return writeErr
 	}
