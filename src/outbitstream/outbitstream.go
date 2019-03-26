@@ -45,7 +45,7 @@ func New(stream brookoutbitstream.OutBitStream) *OutBitStream {
 	return &OutBitStream{stream: stream}
 }
 
-func (s *OutBitStream) writeSignedScale(v int32, rangeValue int, bits uint) error {
+func (s *OutBitStream) WriteSignedScale(v int32, rangeValue int, bits uint) error {
 	if bits < 2 {
 		return fmt.Errorf("Must write at least two bits")
 	}
@@ -62,15 +62,15 @@ func (s *OutBitStream) writeSignedScale(v int32, rangeValue int, bits uint) erro
 // WriteVector3f : Write vector to stream
 func (s *OutBitStream) WriteVector3f(v types.Vector3f, rangeValue int, bits uint) error {
 	var err error
-	err = s.writeSignedScale(v.X, rangeValue, bits)
+	err = s.WriteSignedScale(v.X, rangeValue, bits)
 	if err != nil {
 		return err
 	}
-	err = s.writeSignedScale(v.Y, rangeValue, bits)
+	err = s.WriteSignedScale(v.Y, rangeValue, bits)
 	if err != nil {
 		return err
 	}
-	err = s.writeSignedScale(v.Z, rangeValue, bits)
+	err = s.WriteSignedScale(v.Z, rangeValue, bits)
 	if err != nil {
 		return err
 	}
