@@ -77,6 +77,20 @@ func (s *OutBitStream) WriteVector3f(v types.Vector3f, rangeValue int, bits uint
 	return nil
 }
 
+// WriteVector2f : Write vector to stream
+func (s *OutBitStream) WriteVector2f(v types.Vector2f, rangeValue int, bits uint) error {
+	var err error
+	err = s.WriteSignedScale(v.X, rangeValue, bits)
+	if err != nil {
+		return err
+	}
+	err = s.WriteSignedScale(v.Y, rangeValue, bits)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // WriteQuaternion : Write quaternion to stream
 func (s *OutBitStream) WriteQuaternion(v types.Quaternion) error {
 	info := compression.QuaternionPack(&v)

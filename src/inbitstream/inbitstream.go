@@ -72,6 +72,20 @@ func (s *InBitStream) ReadVector3f(valueRange int, bits uint) (types.Vector3f, e
 	return types.NewVector3f(x, y, z), nil
 }
 
+// ReadVector2f : Reads a vector
+func (s *InBitStream) ReadVector2f(valueRange int, bits uint) (types.Vector2f, error) {
+	x, xErr := s.ReadSignedScale(valueRange, bits)
+	if xErr != nil {
+		return types.Vector2f{}, xErr
+	}
+	y, yErr := s.ReadSignedScale(valueRange, bits)
+	if yErr != nil {
+		return types.Vector2f{}, yErr
+	}
+
+	return types.NewVector2f(x, y), nil
+}
+
 // ReadRotation : Reads a rotation
 func (s *InBitStream) ReadRotation() (types.Quaternion, error) {
 	maxIndex, maxIndexErr := s.stream.ReadBits(3)

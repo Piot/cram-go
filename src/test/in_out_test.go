@@ -5,9 +5,7 @@ import (
 
 	"github.com/piot/basal-go/src/types"
 	brookinbitstream "github.com/piot/brook-go/src/inbitstream"
-	brookinstream "github.com/piot/brook-go/src/instream"
 	brookoutbitstream "github.com/piot/brook-go/src/outbitstream"
-	brookoutstream "github.com/piot/brook-go/src/outstream"
 	craminbitstream "github.com/piot/cram-go/src/inbitstream"
 	cramoutbitstream "github.com/piot/cram-go/src/outbitstream"
 )
@@ -15,11 +13,10 @@ import (
 type TestStream struct {
 	cramBitStream *cramoutbitstream.OutBitStream
 	bitStream     brookoutbitstream.OutBitStream
-	octetWriter   *brookoutstream.OutStream
 }
 
-func NewTestStream(cramBitStream *cramoutbitstream.OutBitStream, bitStream brookoutbitstream.OutBitStream, octetWriter *brookoutstream.OutStream) *TestStream {
-	return &TestStream{cramBitStream: cramBitStream, bitStream: bitStream, octetWriter: octetWriter}
+func NewTestStream(cramBitStream *cramoutbitstream.OutBitStream, bitStream brookoutbitstream.OutBitStream) *TestStream {
+	return &TestStream{cramBitStream: cramBitStream, bitStream: bitStream}
 }
 
 func (t *TestStream) CramStream() *cramoutbitstream.OutBitStream {
@@ -28,18 +25,18 @@ func (t *TestStream) CramStream() *cramoutbitstream.OutBitStream {
 
 func (t *TestStream) Flush() *craminbitstream.InBitStream {
 	t.bitStream.Close()
-	octets := t.octetWriter.Octets()
-	octetReader := brookinstream.New(octets)
-	inBitStream := brookinbitstream.New(octetReader, t.bitStream.Tell())
+	octets := t.bitStream.Octets()
+	inBitStream := brookinbitstream.New(octets, t.bitStream.Tell())
 	cramInBitStream := craminbitstream.New(inBitStream)
+
 	return cramInBitStream
 }
 
 func createCramStream() *TestStream {
-	octetWriter := brookoutstream.New()
-	bitStream := brookoutbitstream.New(octetWriter)
+	bitStream := brookoutbitstream.New(1024)
 	cramStream := cramoutbitstream.New(bitStream)
-	return NewTestStream(cramStream, bitStream, octetWriter)
+
+	return NewTestStream(cramStream, bitStream)
 }
 
 func TestInOut(t *testing.T) {
@@ -47,14 +44,20 @@ func TestInOut(t *testing.T) {
 	testStream := createCramStream()
 	cramStream := testStream.CramStream()
 
-	cramStream.WriteVector3f(v, 1000, 24)
+	writeErr := cramStream.WriteVector3f(v, 1000, 24)
+	if writeErr != nil {
+		t.Fatal(writeErr)
+	}
+
 	inCramStream := testStream.Flush()
 
 	readV, err := inCramStream.ReadVector3f(1000, 24)
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if readV.DistanceTo(v) > 1 {
-		t.Errorf("vectors differ! dist:%v expected %v but received %v", readV.DistanceTo(v), v.DebugString(), readV.DebugString())
+		t.Errorf("vectors differ! dist:%v expected %v but received %v",
+			readV.DistanceTo(v), v.DebugString(), readV.DebugString())
 	}
 }

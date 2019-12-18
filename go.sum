@@ -1,4 +1,8 @@
 github.com/piot/basal-go v0.0.0-20191014203754-890b0129c4b9 h1:3HvEFzi5FwhjohJTdHoXhmiaDvBYPEvzzlHOMVh0O64=
 github.com/piot/basal-go v0.0.0-20191014203754-890b0129c4b9/go.mod h1:WU9ajoaKiU+1C0oU6tIILOsbgSj2JBbfOHcaDPKzrdA=
+github.com/piot/basal-go v0.0.0-20191218144933-475ef129bf3e h1:Ne3X7hoFbC4PaeLt9ThxaZt6KU0xhttohCL/K5e23i4=
+github.com/piot/basal-go v0.0.0-20191218144933-475ef129bf3e/go.mod h1:WU9ajoaKiU+1C0oU6tIILOsbgSj2JBbfOHcaDPKzrdA=
 github.com/piot/brook-go v0.0.0-20191014203915-70ede753e1ce h1:DBtW3+k1XEQY9ucj4aQ/d5z8hliiqipZS7d9HUIAvFg=
 github.com/piot/brook-go v0.0.0-20191014203915-70ede753e1ce/go.mod h1:XOBgIv7ob0m4m0noN1JVeuFrQs3LUxWdaFL+AyP6AGA=
+github.com/piot/brook-go v0.0.0-20191112122856-044790a8729a h1:byqikXm+ERD8ZDJ1tsXXXefTDJl0Rsdvxr2LsjyQBig=
+github.com/piot/brook-go v0.0.0-20191112122856-044790a8729a/go.mod h1:XOBgIv7ob0m4m0noN1JVeuFrQs3LUxWdaFL+AyP6AGA=
